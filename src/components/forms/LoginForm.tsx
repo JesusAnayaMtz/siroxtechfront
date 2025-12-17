@@ -2,6 +2,9 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { login } from "../../services/authService";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const validationSchema = Yup.object({
     email: Yup.string().email('Email Invalido').required('El email es requerido'),
@@ -35,10 +38,10 @@ const LoginForm = () => {
 
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
-            <div>
-                <label htmlFor="email" className="block text-sm font-medium text-foreground">Email</label>
-                <input type="email" id="email" name="email" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-neutral-800 text-foreground" />
+            <div className="grid w-full max-w-sm items-center gap-3">
+                <Label htmlFor="email">Email</Label>
+                <Input type="email" id="email" name="email" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email}
+                />
                 {formik.touched.email && formik.errors.email ? (
                     <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
                 ) : null}
@@ -51,8 +54,7 @@ const LoginForm = () => {
                     <div className="text-red-500 text-sm mt-1">{formik.errors.password}</div>
                 ) : null}
             </div>
-            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-ms shadow-sm text-sm font-medium text-white bg-indigo-700 hover:bg-indigo-900 focus:outline-none
-            focus:ring-2 focus:ring-indigo-500">Iniciar Sesion</button>
+            <Button type="submit" variant="login">Iniciar Sesion</Button>
         </form>
     )
 };
