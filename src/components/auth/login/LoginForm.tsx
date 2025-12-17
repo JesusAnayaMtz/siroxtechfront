@@ -1,17 +1,29 @@
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { login } from "../../services/authService";
+
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input";
+import { InputLogin } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
     email: Yup.string().email('Email Invalido').required('El email es requerido'),
-    password: Yup.string().required('La contraseña es requerida'),
+    password: Yup.string().min(8, 'La contraseña debe tener al menos 8 caracteres').required('La contraseña es requerida'),
 })
 
+import { useAuth } from "@/context/AuthContext"
+import { login } from "@/services/authService";
+
 const LoginForm = () => {
+
+    const navigate = useNavigate()
+    const location = useLocation()
+    const { login: authLogin } = useAuth()
+
+    // Obtiene la ubicación anterior o usa /dashboard por defecto
+    const from = location.state?.from?.pathname || '/dashboard';
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -23,9 +35,9 @@ const LoginForm = () => {
                 const response = await login(values.email, values.password);
                 console.log('Login Exitoso', response)
                 // Guarda el token en localStorage o en el estado global
-                localStorage.setItem('token', response.access_token);
+                authLogin(response.access_token);
                 // Redirige al usuario a la página principal
-                window.location.href = '/dashboard';
+                navigate(from, { replace: true });
             } catch (error) {
                 if (error instanceof Error) {
                     setFieldError('password', error.message);
@@ -39,17 +51,17 @@ const LoginForm = () => {
     return (
         <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid w-full max-w-sm items-center gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input type="email" id="email" name="email" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email}
+                <Label htmlFor="email" className="text-white">Email</Label>
+                <InputLogin type="email" id="email" name="email" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email}
                 />
                 {formik.touched.email && formik.errors.email ? (
                     <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
                 ) : null}
             </div>
             <div>
-                <label htmlFor="password" className="block text-sm font-medium text-foreground">Contraseña</label>
-                <input type="password" id="password" name="password" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.password}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-neutral-800 text-foreground" />
+                <Label htmlFor="password" className="text-white">Contraseña</Label>
+                <InputLogin type="password" id="password" name="password" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.password}
+                />
                 {formik.touched.password && formik.errors.password ? (
                     <div className="text-red-500 text-sm mt-1">{formik.errors.password}</div>
                 ) : null}
