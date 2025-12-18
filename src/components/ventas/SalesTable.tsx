@@ -13,22 +13,22 @@ interface SalesTableProps {
 
 export function SalesTable({ data, users, onView, onDelete }: SalesTableProps) {
     return (
-        <div className="rounded-md border border-neutral-800 bg-neutral-900/50">
+        <div className="rounded-md border border-border bg-card">
             <Table>
                 <TableHeader>
-                    <TableRow className="border-neutral-800 hover:bg-neutral-800/50">
-                        <TableHead className="text-neutral-400">ID Venta</TableHead>
-                        <TableHead className="text-neutral-400">Usuario</TableHead>
-                        <TableHead className="text-neutral-400">Fecha</TableHead>
-                        <TableHead className="text-neutral-400">Estado</TableHead>
-                        <TableHead className="text-neutral-400">Total</TableHead>
-                        <TableHead className="text-right text-neutral-400">Acciones</TableHead>
+                    <TableRow className="border-border hover:bg-muted/50">
+                        <TableHead className="text-muted-foreground">ID Venta</TableHead>
+                        <TableHead className="text-muted-foreground">Usuario</TableHead>
+                        <TableHead className="text-muted-foreground">Fecha</TableHead>
+                        <TableHead className="text-muted-foreground">Estado</TableHead>
+                        <TableHead className="text-muted-foreground">Total</TableHead>
+                        <TableHead className="text-right text-muted-foreground">Acciones</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.length === 0 ? (
-                        <TableRow className="border-neutral-800">
-                            <TableCell colSpan={6} className="h-24 text-center text-neutral-500">
+                        <TableRow className="border-border">
+                            <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                                 No hay ventas registradas.
                             </TableCell>
                         </TableRow>
@@ -36,14 +36,14 @@ export function SalesTable({ data, users, onView, onDelete }: SalesTableProps) {
                         data.map((sale) => {
                             const user = users.find(u => u.id === sale.userId);
                             return (
-                                <TableRow key={sale.id} className="border-neutral-800 hover:bg-neutral-800/50">
-                                    <TableCell className={`font-medium ${sale.canceled ? 'text-neutral-500 line-through' : 'text-white'}`}>
+                                <TableRow key={sale.id} className="border-border hover:bg-muted/50">
+                                    <TableCell className={`font-medium ${sale.canceled ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
                                         {sale.id.slice(0, 8)}...
                                     </TableCell>
-                                    <TableCell className="text-neutral-300">
+                                    <TableCell className="text-muted-foreground">
                                         {user?.name || sale.userId}
                                     </TableCell>
-                                    <TableCell className="text-neutral-300">
+                                    <TableCell className="text-muted-foreground">
                                         {new Date(sale.createdAt).toLocaleDateString()}
                                     </TableCell>
                                     <TableCell>
@@ -54,7 +54,7 @@ export function SalesTable({ data, users, onView, onDelete }: SalesTableProps) {
                                             {!sale.canceled ? 'Activa' : 'Cancelada'}
                                         </span>
                                     </TableCell>
-                                    <TableCell className="text-neutral-300">
+                                    <TableCell className="text-foreground">
                                         ${sale.total.toFixed(2)}
                                     </TableCell>
                                     <TableCell className="text-right">

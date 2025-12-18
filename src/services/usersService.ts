@@ -10,5 +10,10 @@ export const usersService = {
     findOne: async (id: string): Promise<User> => {
         const response = await api.get<User>(`/users/${id}`);
         return response.data;
+    },
+
+    update: async (id: string, data: Partial<User> | any): Promise<User> => {
+        const response = await api.patch<User>(`/users/${id}`, data);
+        return response.data;
     }
 };

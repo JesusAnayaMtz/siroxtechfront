@@ -16,22 +16,35 @@ export const productsService = {
 
     // POST /products
     create: async (data: CreateProductDto): Promise<Product> => {
-        // Ensure numbers are numbers, not strings from inputs
-        const payload = {
-            ...data,
-            price: Number(data.price),
-        };
-        const response = await api.post<Product>('/products', payload);
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('price', String(data.price));
+        formData.append('categoryId', data.categoryId);
+        if (data.description) formData.append('description', data.description);
+        if (data.file) formData.append('file', data.file);
+
+        const response = await api.post<Product>('/products', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         return response.data;
     },
 
     // PATCH /products/:id
     update: async (id: string, data: UpdateProductDto): Promise<Product> => {
-        const payload = {
-            ...data,
-            price: data.price ? Number(data.price) : undefined,
-        };
-        const response = await api.patch<Product>(`/products/${id}`, payload);
+        const formData = new FormData();
+        if (data.name) formData.append('name', data.name);
+        if (data.price !== undefined) formData.append('price', String(data.price));
+        if (data.categoryId) formData.append('categoryId', data.categoryId);
+        if (data.description) formData.append('description', data.description);
+        if (data.file) formData.append('file', data.file);
+
+        const response = await api.patch<Product>(`/products/${id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         return response.data;
     },
 

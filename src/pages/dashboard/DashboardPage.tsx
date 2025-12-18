@@ -65,70 +65,70 @@ export default function DashboardPage() {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+            <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {/* Total Sales Amount */}
-                <Card className="bg-neutral-900 border-neutral-800">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-neutral-400">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">
                             Ventas Totales
                         </CardTitle>
                         <DollarSign className="h-4 w-4 text-green-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">${totalSalesAmount.toFixed(2)}</div>
-                        <p className="text-xs text-neutral-400">
+                        <div className="text-2xl font-bold text-foreground">${totalSalesAmount.toFixed(2)}</div>
+                        <p className="text-xs text-muted-foreground">
                             {totalSalesCount} transacciones activas
                         </p>
                     </CardContent>
                 </Card>
 
                 {/* Top Product */}
-                <Card className="bg-neutral-900 border-neutral-800">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-neutral-400">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">
                             Producto Más Vendido
                         </CardTitle>
                         <TrendingUp className="h-4 w-4 text-indigo-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white truncate" title={topProduct?.name || "Sin datos"}>
+                        <div className="text-2xl font-bold text-foreground truncate" title={topProduct?.name || "Sin datos"}>
                             {topProduct?.name || "N/A"}
                         </div>
-                        <p className="text-xs text-neutral-400">
+                        <p className="text-xs text-muted-foreground">
                             {maxQuantity} unidades vendidas
                         </p>
                     </CardContent>
                 </Card>
 
                 {/* Canceled Sales Amount */}
-                <Card className="bg-neutral-900 border-neutral-800">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-neutral-400">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">
                             Monto Cancelado
                         </CardTitle>
                         <DollarSign className="h-4 w-4 text-red-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">${totalCanceledAmount.toFixed(2)}</div>
-                        <p className="text-xs text-neutral-400">
+                        <div className="text-2xl font-bold text-foreground">${totalCanceledAmount.toFixed(2)}</div>
+                        <p className="text-xs text-muted-foreground">
                             Ingresos perdidos
                         </p>
                     </CardContent>
                 </Card>
 
                 {/* Canceled Sales Count */}
-                <Card className="bg-neutral-900 border-neutral-800">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-neutral-400">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">
                             Ventas Canceladas
                         </CardTitle>
                         <XCircle className="h-4 w-4 text-red-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{totalCanceledCount}</div>
-                        <p className="text-xs text-neutral-400">
+                        <div className="text-2xl font-bold text-foreground">{totalCanceledCount}</div>
+                        <p className="text-xs text-muted-foreground">
                             Transacciones canceladas
                         </p>
                     </CardContent>

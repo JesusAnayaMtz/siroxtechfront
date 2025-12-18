@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sidebar"
 import { menuData } from "@/config/menu"
 import logoWeb from "@/assets/logoweb.png"
+import { ModeToggle } from "@/components/mode-toggle"
 
 import { useLogout } from "@/hooks/use-logout"
 import { useAuth } from "@/context/AuthContext"
@@ -26,26 +27,29 @@ export default function DashboardLayout() {
 
             <SidebarInset>
                 {/* Mobile Header */}
-                <header className="flex h-16 items-center justify-between border-b bg-neutral-900 px-4 md:hidden">
+                <header className="flex h-16 items-center justify-between border-b bg-background px-4 md:hidden">
                     <img src={logoWeb} alt="Logo" className="h-8 w-auto" />
-                    <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="text-white hover:text-neutral-300 focus:outline-none"
-                    >
-                        {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <ModeToggle />
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="text-foreground hover:text-muted-foreground focus:outline-none"
+                        >
+                            {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+                        </button>
+                    </div>
                 </header>
 
                 {/* Mobile Dropdown Menu */}
                 {isMobileMenuOpen && (
-                    <div className="border-b bg-neutral-900 px-4 py-4 md:hidden animate-in slide-in-from-top-2">
+                    <div className="border-b bg-background px-4 py-4 md:hidden animate-in slide-in-from-top-2">
                         <nav className="flex flex-col gap-4">
                             {/* User Info */}
-                            <div className="flex items-center gap-3 rounded-lg bg-neutral-800 p-3">
-                                <div className="size-8 rounded-full bg-neutral-700" /> {/* Placeholder avatar if needed or use image */}
+                            <div className="flex items-center gap-3 rounded-lg bg-secondary p-3">
+                                <div className="size-8 rounded-full bg-muted-foreground/20" /> {/* Placeholder avatar if needed or use image */}
                                 <div>
-                                    <p className="text-sm font-semibold text-white">{user?.name || menuData.user.name}</p>
-                                    <p className="text-xs text-neutral-400">{user?.email || menuData.user.email}</p>
+                                    <p className="text-sm font-semibold text-foreground">{user?.name || menuData.user.name}</p>
+                                    <p className="text-xs text-muted-foreground">{user?.email || menuData.user.email}</p>
                                 </div>
                             </div>
 
@@ -54,10 +58,10 @@ export default function DashboardLayout() {
                                 <a
                                     key={item.title}
                                     href={item.url}
-                                    className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium text-white hover:bg-neutral-800"
+                                    className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    <item.icon className="size-5 text-neutral-400" />
+                                    <item.icon className="size-5 text-muted-foreground" />
                                     {item.title}
                                 </a>
                             ))}

@@ -24,10 +24,10 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+            <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive} className="group/menu-button">
               <a href={item.url}>
-                {item.icon && <item.icon />}
-                <span >{item.title}</span>
+                {item.icon && <item.icon className="text-zinc-800 dark:text-zinc-800 group-hover/menu-button:text-foreground dark:group-hover/menu-button:text-white transition-colors" />}
+                <span>{item.title}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

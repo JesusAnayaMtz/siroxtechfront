@@ -6,6 +6,7 @@ export interface Product {
     categoryId: string;
     categoryName?: string;
     category?: { name: string }; // Optional relation for display
+    imageUrl?: string;
     isActive: boolean;
     createdAt?: string;
     updatedAt?: string;
@@ -16,6 +17,9 @@ export interface CreateProductDto {
     description?: string;
     price: number;
     categoryId: string;
+    file?: File | null;
 }
 
-export interface UpdateProductDto extends Partial<CreateProductDto> { }
+export interface UpdateProductDto extends Partial<Omit<CreateProductDto, 'file'>> {
+    file?: File | null;
+}

@@ -19,34 +19,34 @@ export function ProductsTable({ data, onEdit, onDelete, onRestore }: ProductsTab
     }
 
     return (
-        <div className="rounded-md border border-neutral-800 bg-neutral-900/50">
+        <div className="rounded-md border border-border bg-card">
             <Table>
                 <TableHeader>
-                    <TableRow className="border-neutral-800 hover:bg-neutral-800/50">
-                        <TableHead className="text-neutral-400">Nombre</TableHead>
-                        <TableHead className="text-neutral-400">Categoría</TableHead>
-                        <TableHead className="text-neutral-400">Precio</TableHead>
-                        <TableHead className="text-neutral-400">Estado</TableHead>
-                        <TableHead className="text-right text-neutral-400">Acciones</TableHead>
+                    <TableRow className="border-border hover:bg-muted/50">
+                        <TableHead className="text-muted-foreground">Nombre</TableHead>
+                        <TableHead className="text-muted-foreground">Categoría</TableHead>
+                        <TableHead className="text-muted-foreground">Precio</TableHead>
+                        <TableHead className="text-muted-foreground">Estado</TableHead>
+                        <TableHead className="text-right text-muted-foreground">Acciones</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.length === 0 ? (
-                        <TableRow className="border-neutral-800">
-                            <TableCell colSpan={6} className="h-24 text-center text-neutral-500">
+                        <TableRow className="border-border">
+                            <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                                 No hay productos registrados.
                             </TableCell>
                         </TableRow>
                     ) : (
                         data.map((product) => (
-                            <TableRow key={product.id} className="border-neutral-800 hover:bg-neutral-800/50">
-                                <TableCell className={`font-medium ${product.isActive ? 'text-white' : 'text-neutral-500 line-through'}`}>
+                            <TableRow key={product.id} className="border-border hover:bg-muted/50">
+                                <TableCell className={`font-medium ${product.isActive ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
                                     {product.name}
                                 </TableCell>
-                                <TableCell className="text-neutral-400">
+                                <TableCell className="text-muted-foreground">
                                     {product.categoryName || 'Sin Categoría'}
                                 </TableCell>
-                                <TableCell className="text-neutral-300">
+                                <TableCell className="text-foreground">
                                     {formatCurrency(product.price)}
                                 </TableCell>
                                 <TableCell>

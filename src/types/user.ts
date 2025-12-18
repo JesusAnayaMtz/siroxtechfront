@@ -6,3 +6,15 @@ export interface User {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface CreateUserDto {
+    name: string;
+    email: string;
+    password: string;
+    isActive?: boolean;
+}
+
+export interface UpdateUserDto {
+    name?: string;
+    password?: string;
+}

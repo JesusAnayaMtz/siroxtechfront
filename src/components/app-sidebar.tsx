@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
+import { ModeToggle } from "@/components/mode-toggle"
 
 import { menuData } from "@/config/menu"
 import { useLogout } from "@/hooks/use-logout"
@@ -28,11 +29,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center justify-between py-4 px-2">
-          <a href="/dashboard" className="flex items-center">
+        <div className="flex items-center justify-between py-4 px-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+          <a href="/dashboard" className="flex items-center group-data-[collapsible=icon]:hidden">
             <img src={logoWeb} alt="Logo" className="h-10 w-auto cursor-pointer hover:opacity-75" />
           </a>
-          <SidebarTrigger />
+          <div className="flex items-center gap-1 group-data-[collapsible=icon]:hidden">
+            <ModeToggle />
+            <SidebarTrigger />
+          </div>
+          {/* Trigger visible only when collapsed */}
+          <div className="hidden group-data-[collapsible=icon]:block">
+            <SidebarTrigger />
+          </div>
         </div>
         <div className="px-2 pb-2 group-data-[collapsible=icon]:hidden">
           <p className="text-base font-semibold text-sidebar-foreground">{user?.name || menuData.user.name}</p>
@@ -44,6 +52,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Mi Perfil">
+              <a href="/profile">
+                <span className="truncate">Mi Perfil</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
