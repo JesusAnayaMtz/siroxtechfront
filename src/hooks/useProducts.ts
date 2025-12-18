@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { Product, CreateProductDto, UpdateProductDto } from '@/types/product'
+import type { CreateProductDto, UpdateProductDto } from '@/types/product'
 import { productsService } from '@/services/productsService'
 
 export const useProducts = () => {
