@@ -1,0 +1,266 @@
+import { useState, useEffect } from "react"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import { Plus, Trash2 } from "lucide-react"
+
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+    DialogDescription,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { productsService } from "@/services/productsService"
+import type { Product } from "@/types/product"
+import type { CreateSaleDto } from "@/types/sale"
+
+interface CreateSaleFormProps {
+    open: boolean;
+    onClose: () => void;
+    onSubmit: (values: CreateSaleDto) => Promise<void>;
+    isLoading?: boolean;
+}
+
+// Schema validates that there is at least one item
+const validationSchema = Yup.object({
+    items: Yup.array().of(
+        Yup.object({
+            productId: Yup.string().required(),
+            quantity: Yup.number().min(1).required(),
+        })
+    ).min(1, "Debe agregar al menos un producto"),
+})
+
+export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSaleFormProps) {
+    const [products, setProducts] = useState<Product[]>([])
+
+    // Local state for the "Add Item" inputs
+    const [selectedProductId, setSelectedProductId] = useState<string>("")
+    const [quantity, setQuantity] = useState<number>(1)
+
+    // Load products on mount
+    useEffect(() => {
+        const loadProducts = async () => {
+            try {
+                const data = await productsService.findAll()
+                setProducts(data.filter(p => p.isActive)) // Only active products
+            } catch (error) {
+                console.error("Failed to load products", error)
+            }
+        }
+        loadProducts()
+    }, [])
+
+    const formik = useFormik<CreateSaleDto>({
+        initialValues: {
+            items: [],
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            await onSubmit(values)
+            handleClose()
+        },
+    })
+
+    const handleClose = () => {
+        formik.resetForm()
+        setSelectedProductId("")
+        setQuantity(1)
+        onClose()
+    }
+
+    const handleAddItem = () => {
+        if (!selectedProductId || quantity < 1) return
+
+        const product = products.find(p => p.id === selectedProductId)
+        if (!product) return
+
+        // Check if already exists, then update quantity
+        const existingItemIndex = formik.values.items.findIndex(item => item.productId === selectedProductId)
+
+        if (existingItemIndex >= 0) {
+            const newItems = [...formik.values.items]
+            newItems[existingItemIndex].quantity += quantity
+            formik.setFieldValue("items", newItems)
+        } else {
+            formik.setFieldValue("items", [
+                ...formik.values.items,
+                { productId: selectedProductId, quantity }
+            ])
+        }
+
+        // Reset inputs
+        setSelectedProductId("")
+        setQuantity(1)
+    }
+
+    const handleRemoveItem = (index: number) => {
+        const newItems = [...formik.values.items]
+        newItems.splice(index, 1)
+        formik.setFieldValue("items", newItems)
+    }
+
+    const handleUpdateQuantity = (index: number, change: number) => {
+        const newItems = [...formik.values.items]
+        const currentItem = newItems[index]
+        const newQuantity = currentItem.quantity + change
+
+        if (newQuantity < 1) return
+
+        newItems[index] = { ...currentItem, quantity: newQuantity }
+        formik.setFieldValue("items", newItems)
+    }
+
+    // Calculate total for display
+    const total = formik.values.items.reduce((acc, item) => {
+        const product = products.find(p => p.id === item.productId)
+        return acc + (product ? product.price * item.quantity : 0)
+    }, 0)
+
+    return (
+        <Dialog open={open} onOpenChange={handleClose}>
+            <DialogContent className="bg-neutral-900 border-neutral-800 text-white sm:max-w-[600px]">
+                <DialogHeader>
+                    <DialogTitle className="text-white">Nueva Venta</DialogTitle>
+                    <DialogDescription>
+                        Agregue productos a la venta.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4 py-4">
+                    {/* Add Item Section */}
+                    <div className="flex gap-4 items-end">
+                        <div className="flex-1 space-y-2">
+                            <Label className="text-white">Producto</Label>
+                            <select
+                                className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                value={selectedProductId}
+                                onChange={(e) => setSelectedProductId(e.target.value)}
+                            >
+                                <option value="">Seleccionar producto...</option>
+                                {products.map((product) => (
+                                    <option key={product.id} value={product.id}>
+                                        {product.name} - ${product.price}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="w-24 space-y-2">
+                            <Label className="text-white">Cantidad</Label>
+                            <Input
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                onChange={(e) => setQuantity(Number(e.target.value))}
+                                className="bg-neutral-800 border-neutral-700 text-white"
+                            />
+                        </div>
+                        <Button
+                            type="button"
+                            onClick={handleAddItem}
+                            disabled={!selectedProductId}
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                        >
+                            <Plus className="size-4" />
+                        </Button>
+                    </div>
+
+                    {/* Items List */}
+                    <div className="rounded-md border border-neutral-800 bg-neutral-900/50 p-2 min-h-[150px] max-h-[300px] overflow-y-auto">
+                        {formik.values.items.length === 0 ? (
+                            <div className="flex items-center justify-center h-full text-neutral-500 text-sm">
+                                No hay productos agregados.
+                            </div>
+                        ) : (
+                            <div className="space-y-2">
+                                {formik.values.items.map((item, index) => {
+                                    const product = products.find(p => p.id === item.productId)
+                                    if (!product) return null
+
+                                    return (
+                                        <div key={item.productId} className="flex items-center justify-between p-2 rounded bg-neutral-800 border border-neutral-700">
+                                            <div className="text-sm">
+                                                <div className="text-white font-medium">{product.name}</div>
+                                                <div className="text-neutral-400">
+                                                    {item.quantity} x ${product.price.toFixed(2)}
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-1 bg-neutral-700 rounded-md p-0.5">
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6 text-white hover:bg-neutral-600"
+                                                        onClick={() => handleUpdateQuantity(index, -1)}
+                                                        disabled={item.quantity <= 1}
+                                                    >
+                                                        <span className="text-xs">-</span>
+                                                    </Button>
+                                                    <span className="text-xs w-6 text-center text-white">{item.quantity}</span>
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6 text-white hover:bg-neutral-600"
+                                                        onClick={() => handleUpdateQuantity(index, 1)}
+                                                    >
+                                                        <span className="text-xs">+</span>
+                                                    </Button>
+                                                </div>
+
+                                                <div className="text-white font-bold w-20 text-right">
+                                                    ${(item.quantity * product.price).toFixed(2)}
+                                                </div>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleRemoveItem(index)}
+                                                    className="h-8 w-8 text-red-400 hover:text-red-300"
+                                                >
+                                                    <Trash2 className="size-4" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Total & Errors */}
+                    <div className="flex justify-between items-center border-t border-neutral-800 pt-4">
+                        <div>
+                            {typeof formik.errors.items === 'string' && (
+                                <p className="text-sm text-red-400">{formik.errors.items}</p>
+                            )}
+                        </div>
+                        <div className="text-right">
+                            <span className="text-neutral-400 text-sm">Total a pagar:</span>
+                            <div className="text-2xl font-bold text-white">${total.toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <DialogFooter>
+                    <Button type="button" variant="ghost" onClick={handleClose} className="text-neutral-400 hover:text-white" disabled={isLoading}>
+                        Cancelar
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => formik.handleSubmit()}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                        disabled={isLoading || formik.values.items.length === 0}
+                    >
+                        {isLoading ? "Procesando..." : "Finalizar Venta"}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}

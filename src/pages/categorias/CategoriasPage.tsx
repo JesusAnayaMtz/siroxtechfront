@@ -1,32 +1,31 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import type { Category, CreateCategoryDto } from "@/types/category"
-import { categoriesService } from "@/services/categoriesService"
 import { CategoriesTable } from "@/components/categorias/CategoriesTable"
 import { CategoryForm } from "@/components/categorias/CategoryForm"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
+import {
+    useCategories,
+    useCreateCategory,
+    useUpdateCategory,
+    useDeleteCategory,
+    useRestoreCategory
+} from "@/hooks/useCategories"
 
 export default function CategoriasPage() {
-    const [categories, setCategories] = useState<Category[]>([])
-    const [isLoading, setIsLoading] = useState(false)
+    const { data: categories = [], isLoading: isLoadingCategories } = useCategories()
+
+    const createMutation = useCreateCategory()
+    const updateMutation = useUpdateCategory()
+    const deleteMutation = useDeleteCategory()
+    const restoreMutation = useRestoreCategory()
+
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
-    const fetchCategories = async () => {
-        try {
-            setIsLoading(true)
-            const data = await categoriesService.findAll()
-            setCategories(data)
-        } catch (error) {
-            console.error("Failed to fetch categories", error)
-        } finally {
-            setIsLoading(false)
-        }
-    }
-
-    useEffect(() => {
-        fetchCategories()
-    }, [])
+    const isLoading = isLoadingCategories ||
+        createMutation.isPending || updateMutation.isPending ||
+        deleteMutation.isPending || restoreMutation.isPending
 
     const handleCreate = () => {
         setSelectedCategory(null)
@@ -41,8 +40,7 @@ export default function CategoriasPage() {
     const handleDelete = async (id: string) => {
         if (!confirm("¿Estás seguro de que quieres desactivar esta categoría?")) return
         try {
-            await categoriesService.remove(id)
-            await fetchCategories()
+            await deleteMutation.mutateAsync(id)
         } catch (error) {
             console.error("Failed to delete category", error)
         }
@@ -51,8 +49,7 @@ export default function CategoriasPage() {
     const handleRestore = async (id: string) => {
         if (!confirm("¿Estás seguro de que quieres restaurar esta categoría?")) return
         try {
-            await categoriesService.restore(id)
-            await fetchCategories()
+            await restoreMutation.mutateAsync(id)
         } catch (error) {
             console.error("Failed to restore category", error)
         }
@@ -61,12 +58,11 @@ export default function CategoriasPage() {
     const handleSubmit = async (values: CreateCategoryDto) => {
         try {
             if (selectedCategory) {
-                await categoriesService.update(selectedCategory.id, values)
+                await updateMutation.mutateAsync({ id: selectedCategory.id, data: values })
             } else {
-                await categoriesService.create(values)
+                await createMutation.mutateAsync(values)
             }
             setIsDialogOpen(false)
-            await fetchCategories()
         } catch (error) {
             console.error("Failed to save category", error)
         }
