@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
   LogOut,
+  User,
 } from "lucide-react"
 import logoWeb from "@/assets/logoweb.png"
 
@@ -55,6 +56,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Mi Perfil">
               <a href="/profile">
+                <User />
                 <span className="truncate">Mi Perfil</span>
               </a>
             </SidebarMenuButton>
