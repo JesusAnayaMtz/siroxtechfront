@@ -115,13 +115,17 @@ export default function ProductosPage() {
                 />
             </div>
 
-            <ProductsTable
-                data={sortedProducts}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onRestore={handleRestore}
-                onView={handleView}
-            />
+            {isLoading ? (
+                <div className="text-center text-muted-foreground py-8">Cargando productos...</div>
+            ) : (
+                <ProductsTable
+                    data={sortedProducts}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onRestore={handleRestore}
+                    onView={handleView}
+                />
+            )}
 
             <ProductForm
                 open={isDialogOpen}

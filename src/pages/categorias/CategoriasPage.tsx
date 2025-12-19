@@ -97,12 +97,16 @@ export default function CategoriasPage() {
                 />
             </div>
 
-            <CategoriesTable
-                data={filteredCategories}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onRestore={handleRestore}
-            />
+            {isLoading ? (
+                <div className="text-center text-muted-foreground py-8">Cargando categorías...</div>
+            ) : (
+                <CategoriesTable
+                    data={filteredCategories}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onRestore={handleRestore}
+                />
+            )}
 
             <CategoryForm
                 open={isDialogOpen}
