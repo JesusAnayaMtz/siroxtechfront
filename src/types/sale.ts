@@ -8,6 +8,7 @@ export interface SaleItem {
 export interface Sale {
     id: string;
     userId: string;
+    clientId?: string | null;
     total: number;
     canceled: boolean;
     createdAt: string;
@@ -15,6 +16,7 @@ export interface Sale {
 }
 
 export interface CreateSaleDto {
+    clientId?: string;
     items: {
         productId: string;
         quantity: number;

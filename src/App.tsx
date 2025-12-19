@@ -6,6 +6,7 @@ import DashboardLayout from "@/layouts/DashboardLayout"
 import DashboardPage from "./pages/dashboard/DashboardPage"
 import CategoriasPage from "./pages/categorias/CategoriasPage"
 import ProductosPage from "./pages/productos/ProductosPage"
+import ClientsPage from "./pages/clientes/ClientsPage"
 import VentasPage from "./pages/ventas/VentasPage"
 import { ProtectedRoute } from "./components/auth/ProtectedRoute"
 import { AuthProvider } from "./context/AuthContext"
@@ -30,6 +31,7 @@ function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/categorias" element={<CategoriasPage />} />
               <Route path="/productos" element={<ProductosPage />} />
+              <Route path="/clientes" element={<ClientsPage />} />
               <Route path="/ventas" element={<VentasPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>

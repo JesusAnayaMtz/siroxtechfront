@@ -8,6 +8,7 @@ import { SaleDetailsModal } from "@/components/ventas/SaleDetailsModal"
 import { salesService } from "@/services/salesService"
 import { productsService } from "@/services/productsService"
 import { usersService } from "@/services/usersService"
+import { clientsService } from "@/services/clientsService"
 import { useAuth } from "@/context/AuthContext"
 import { showConfirm } from "@/lib/sweetalert"
 import { Pagination } from "@/components/ui/pagination"
@@ -17,11 +18,13 @@ const ITEMS_PER_PAGE = 10
 
 import type { Product } from "@/types/product"
 import type { User } from "@/types/user"
+import type { Client } from "@/types/client"
 
 export default function VentasPage() {
     const [sales, setSales] = useState<Sale[]>([])
     const [products, setProducts] = useState<Product[]>([])
     const [users, setUsers] = useState<User[]>([])
+    const [clients, setClients] = useState<Client[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
@@ -39,15 +42,17 @@ export default function VentasPage() {
     const loadData = async () => {
         try {
             setIsLoading(true)
-            const [salesData, productsData, usersData] = await Promise.all([
+            const [salesData, productsData, usersData, clientsData] = await Promise.all([
                 salesService.findAll(),
                 productsService.findAll(),
-                usersService.findAll()
+                usersService.findAll(),
+                clientsService.findAll()
             ])
             console.log("Sales Data:", salesData)
             setSales(salesData)
             setProducts(productsData)
             setUsers(usersData)
+            setClients(clientsData)
         } catch (error) {
             console.error("Failed to load data", error)
         } finally {
@@ -100,6 +105,10 @@ export default function VentasPage() {
         const user = users.find(u => u.id === sale.userId);
         const userName = user?.name?.toLowerCase() || "";
 
+        // Find client name
+        const client = clients.find(c => c.id === sale.clientId);
+        const clientName = client?.name?.toLowerCase() || "";
+
         // Format date
         const dateStr = new Date(sale.createdAt).toLocaleString().toLowerCase();
 
@@ -108,6 +117,7 @@ export default function VentasPage() {
 
         return (
             userName.includes(term) ||
+            clientName.includes(term) ||
             dateStr.includes(term) ||
             status.includes(term)
         );
@@ -132,7 +142,7 @@ export default function VentasPage() {
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
-                    placeholder="Buscar por usuario, fecha o estado..."
+                    placeholder="Buscar por cliente, vendedor, fecha o estado..."
                     value={searchTerm}
                     onChange={(e) => {
                         setSearchTerm(e.target.value)
@@ -149,6 +159,7 @@ export default function VentasPage() {
                     <SalesTable
                         data={filteredSales.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)}
                         users={users}
+                        clients={clients}
                         onView={handleViewSale}
                         onDelete={handleDeleteSale}
                     />
@@ -174,6 +185,7 @@ export default function VentasPage() {
                 sale={selectedSale}
                 products={products}
                 users={users}
+                clients={clients}
             />
         </div>
     )

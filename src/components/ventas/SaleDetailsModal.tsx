@@ -8,40 +8,66 @@ import {
 import type { Sale } from "@/types/sale"
 import type { Product } from "@/types/product"
 import type { User } from "@/types/user"
+import type { Client } from "@/types/client"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 interface SaleDetailsModalProps {
+    open: boolean;
+    onClose: () => void;
     sale: Sale | null;
     products: Product[];
     users: User[];
-    open: boolean;
-    onClose: () => void;
+    clients: Client[];
 }
 
-export function SaleDetailsModal({ sale, products, users, open, onClose }: SaleDetailsModalProps) {
+export function SaleDetailsModal({ open, onClose, sale, products, users, clients }: SaleDetailsModalProps) {
     if (!sale) return null
 
-    const user = users.find(u => u.id === sale.userId);
+    const user = users.find(u => u.id === sale.userId)
+    const client = clients.find(c => c.id === sale?.clientId)
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="bg-background border-border text-foreground sm:max-w-[700px]">
+            <DialogContent className="bg-background border-border text-foreground sm:max-w-[600px]">
                 <DialogHeader>
                     <DialogTitle className="text-foreground">Detalle de Venta</DialogTitle>
                     <DialogDescription>
-                        ID: {sale.id}
+                        Información completa de la transacción.
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="space-y-4">
+                <div className="space-y-6 py-4">
                     <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="flex justify-between items-center">
-                            <span className="text-muted-foreground">Fecha:</span>
-                            <span className="text-foreground">{new Date(sale.createdAt).toLocaleString()}</span>
+                        <div>
+                            <span className="text-muted-foreground block">ID Venta:</span>
+                            <span className="font-medium text-foreground">{sale.id}</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-muted-foreground">Usuario:</span>
-                            <span className="text-foreground">{user?.name || sale.userId}</span>
+                        <div>
+                            <span className="text-muted-foreground block">Fecha:</span>
+                            <span className="font-medium text-foreground">
+                                {new Date(sale.createdAt).toLocaleString()}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-muted-foreground block">Vendedor:</span>
+                            <span className="font-medium text-foreground">
+                                {user?.name || sale.userId}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-muted-foreground block">Cliente:</span>
+                            <span className="font-medium text-foreground">
+                                {client?.name || 'Cliente General'}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-muted-foreground block">Estado:</span>
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${!sale.canceled
+                                ? 'bg-green-500/10 text-green-500'
+                                : 'bg-red-500/10 text-red-500'
+                                }`}>
+                                {!sale.canceled ? 'Activa' : 'Cancelada'}
+                            </span>
                         </div>
                     </div>
 

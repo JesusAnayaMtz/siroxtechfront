@@ -3,6 +3,7 @@ import {
     Tags,
     DollarSign,
     Home,
+    Users,
 } from "lucide-react"
 
 export const menuData = {
@@ -26,6 +27,11 @@ export const menuData = {
             title: "Productos",
             url: "/productos",
             icon: ShoppingBag,
+        },
+        {
+            title: "Clientes",
+            url: "/clientes",
+            icon: Users,
         },
         {
             title: "Ventas",

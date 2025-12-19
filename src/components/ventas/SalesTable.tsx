@@ -2,24 +2,26 @@ import { Button } from "@/components/ui/button"
 import { Trash2, Eye } from "lucide-react"
 import type { Sale } from "@/types/sale"
 import type { User } from "@/types/user"
+import type { Client } from "@/types/client"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 interface SalesTableProps {
     data: Sale[];
     users: User[];
+    clients: Client[];
     onView: (id: string) => void;
     onDelete: (id: string) => void;
 }
 
 // Tabla para visualizar el historial de ventas
-export function SalesTable({ data, users, onView, onDelete }: SalesTableProps) {
+export function SalesTable({ data, users, clients, onView, onDelete }: SalesTableProps) {
     return (
         <div className="rounded-md border border-border bg-card">
             <Table>
                 <TableHeader>
                     <TableRow className="border-border hover:bg-muted/50">
-                        <TableHead className="text-muted-foreground">ID Venta</TableHead>
-                        <TableHead className="text-muted-foreground">Usuario</TableHead>
+                        <TableHead className="text-muted-foreground">Cliente</TableHead>
+                        <TableHead className="text-muted-foreground">Vendedor</TableHead>
                         <TableHead className="text-muted-foreground">Fecha</TableHead>
                         <TableHead className="text-muted-foreground">Estado</TableHead>
                         <TableHead className="text-muted-foreground">Total</TableHead>
@@ -36,10 +38,11 @@ export function SalesTable({ data, users, onView, onDelete }: SalesTableProps) {
                     ) : (
                         data.map((sale) => {
                             const user = users.find(u => u.id === sale.userId);
+                            const client = clients.find(c => c.id === sale.clientId);
                             return (
                                 <TableRow key={sale.id} className="border-border hover:bg-muted/50">
                                     <TableCell className={`font-medium ${sale.canceled ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
-                                        {sale.id.slice(0, 8)}...
+                                        {client?.name || 'Cliente General'}
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
                                         {user?.name || sale.userId}

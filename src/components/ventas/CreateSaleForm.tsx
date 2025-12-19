@@ -15,7 +15,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { productsService } from "@/services/productsService"
+import { clientsService } from "@/services/clientsService"
 import type { Product } from "@/types/product"
+import type { Client } from "@/types/client"
 import type { CreateSaleDto } from "@/types/sale"
 
 interface CreateSaleFormProps {
@@ -27,6 +29,7 @@ interface CreateSaleFormProps {
 
 // El esquema valida que haya al menos un producto en la venta
 const validationSchema = Yup.object({
+    clientId: Yup.string().nullable(),
     items: Yup.array().of(
         Yup.object({
             productId: Yup.string().required(),
@@ -37,31 +40,42 @@ const validationSchema = Yup.object({
 
 export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSaleFormProps) {
     const [products, setProducts] = useState<Product[]>([])
+    const [clients, setClients] = useState<Client[]>([])
 
     // Estado local para los inputs de "Agregar Item"
     const [selectedProductId, setSelectedProductId] = useState<string>("")
     const [quantity, setQuantity] = useState<number>(1)
 
-    // Cargar productos al montar el componente
+    // Cargar productos y clientes al montar el componente
     useEffect(() => {
-        const loadProducts = async () => {
+        const loadData = async () => {
             try {
-                const data = await productsService.findAll()
-                setProducts(data.filter(p => p.isActive)) // Solo productos activos
+                const [productsData, clientsData] = await Promise.all([
+                    productsService.findAll(),
+                    clientsService.findAll()
+                ])
+                setProducts(productsData.filter(p => p.isActive))
+                setClients(clientsData.filter(c => c.isActive))
             } catch (error) {
-                console.error("Failed to load products", error)
+                console.error("Failed to load data", error)
             }
         }
-        loadProducts()
+        loadData()
     }, [])
 
     const formik = useFormik<CreateSaleDto>({
         initialValues: {
+            clientId: "",
             items: [],
         },
         validationSchema,
         onSubmit: async (values) => {
-            await onSubmit(values)
+            // Limpiar clientId si es string vacío
+            const submitValues = {
+                ...values,
+                clientId: values.clientId || undefined
+            }
+            await onSubmit(submitValues)
             handleClose()
         },
         validateOnBlur: false,
@@ -129,11 +143,30 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                 <DialogHeader>
                     <DialogTitle className="text-foreground">Nueva Venta</DialogTitle>
                     <DialogDescription>
-                        Agregue productos a la venta.
+                        Seleccione el cliente y agregue productos.
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
+                    {/* Selección de Cliente */}
+                    <div className="space-y-2">
+                        <Label htmlFor="clientId" className="text-foreground">Cliente</Label>
+                        <select
+                            id="clientId"
+                            name="clientId"
+                            className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                            value={formik.values.clientId || ""}
+                            onChange={formik.handleChange}
+                        >
+                            <option value="">Seleccione un cliente</option>
+                            {clients.map((client) => (
+                                <option key={client.id} value={client.id}>
+                                    {client.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     {/* Sección de agregar producto */}
                     <div className="flex gap-4 items-end">
                         <div className="flex-1 space-y-2">
