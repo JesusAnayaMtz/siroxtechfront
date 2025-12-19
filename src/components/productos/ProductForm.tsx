@@ -23,6 +23,7 @@ interface ProductFormProps {
     initialData?: Product | null;
     categories: Category[];
     isLoading?: boolean;
+    isReadOnly?: boolean;
 }
 
 const validationSchema = Yup.object({
@@ -32,7 +33,7 @@ const validationSchema = Yup.object({
     description: Yup.string(),
 })
 
-export function ProductForm({ open, onClose, onSubmit, initialData, categories, isLoading }: ProductFormProps) {
+export function ProductForm({ open, onClose, onSubmit, initialData, categories, isLoading, isReadOnly = false }: ProductFormProps) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const formik = useFormik({
@@ -45,6 +46,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
         },
         validationSchema,
         onSubmit: async (values) => {
+            if (isReadOnly) return;
             await onSubmit(values)
             formik.resetForm()
             setPreviewUrl(null)
@@ -75,6 +77,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
     }, [open, initialData, categories])
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (isReadOnly) return;
         if (event.currentTarget.files && event.currentTarget.files[0]) {
             const file = event.currentTarget.files[0];
             formik.setFieldValue("file", file);
@@ -87,10 +90,10 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
             <DialogContent className="bg-background border-border text-foreground sm:max-w-4xl">
                 <DialogHeader>
                     <DialogTitle className="text-foreground text-xl">
-                        {initialData ? "Editar Producto" : "Nuevo Producto"}
+                        {isReadOnly ? "Detalle de Producto" : (initialData ? "Editar Producto" : "Nuevo Producto")}
                     </DialogTitle>
                     <DialogDescription>
-                        Complete la información del producto a continuación.
+                        {isReadOnly ? "Información detallada del producto." : "Complete la información del producto a continuación."}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -108,8 +111,9 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     className="bg-secondary border-input text-foreground focus-visible:ring-indigo-500"
+                                    disabled={isReadOnly}
                                 />
-                                {formik.touched.name && formik.errors.name && (
+                                {formik.touched.name && formik.errors.name && !isReadOnly && (
                                     <p className="text-sm text-red-400">{formik.errors.name}</p>
                                 )}
                             </div>
@@ -122,7 +126,8 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                                     value={formik.values.categoryId}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    className="flex h-9 w-full rounded-md border border-input bg-secondary px-3 py-1 text-sm shadow-sm transition-colors text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500"
+                                    className="flex h-9 w-full rounded-md border border-input bg-secondary px-3 py-1 text-sm shadow-sm transition-colors text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={isReadOnly}
                                 >
                                     <option value="">Seleccione una categoría</option>
                                     {categories.map((cat) => (
@@ -131,7 +136,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                                         </option>
                                     ))}
                                 </select>
-                                {formik.touched.categoryId && formik.errors.categoryId && (
+                                {formik.touched.categoryId && formik.errors.categoryId && !isReadOnly && (
                                     <p className="text-sm text-red-400">{formik.errors.categoryId}</p>
                                 )}
                             </div>
@@ -147,8 +152,9 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     className="bg-secondary border-input text-foreground focus-visible:ring-indigo-500"
+                                    disabled={isReadOnly}
                                 />
-                                {formik.touched.price && formik.errors.price && (
+                                {formik.touched.price && formik.errors.price && !isReadOnly && (
                                     <p className="text-sm text-red-400">{formik.errors.price}</p>
                                 )}
                             </div>
@@ -163,6 +169,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     className="bg-secondary border-input text-foreground focus-visible:ring-indigo-500"
+                                    disabled={isReadOnly}
                                 />
                             </div>
                         </div>
@@ -171,7 +178,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                         <div className="space-y-2 flex flex-col">
                             <Label htmlFor="file" className="text-foreground mb-2">Imagen del Producto</Label>
 
-                            <div className="flex-1 rounded-lg border-2 border-dashed border-input bg-secondary/50 hover:bg-secondary transition-colors relative group overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
+                            <div className={`flex-1 rounded-lg border-2 border-dashed border-input bg-secondary/50 transition-colors relative group overflow-hidden flex flex-col items-center justify-center min-h-[300px] ${!isReadOnly ? 'hover:bg-secondary' : ''}`}>
                                 {previewUrl ? (
                                     <>
                                         <img
@@ -179,37 +186,48 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                                             alt="Preview"
                                             className="absolute inset-0 w-full h-full object-contain p-2"
                                         />
-                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <p className="text-white font-medium">Cambiar Imagen</p>
-                                        </div>
+                                        {!isReadOnly && (
+                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <p className="text-white font-medium">Cambiar Imagen</p>
+                                            </div>
+                                        )}
                                     </>
                                 ) : (
                                     <div className="text-center p-6">
                                         <ImagePlus className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
-                                        <p className="text-sm text-muted-foreground font-medium">Click para subir imagen</p>
-                                        <p className="text-xs text-muted-foreground mt-1">PNG, JPG hasta 5MB</p>
+                                        {!isReadOnly && (
+                                            <>
+                                                <p className="text-sm text-muted-foreground font-medium">Click para subir imagen</p>
+                                                <p className="text-xs text-muted-foreground mt-1">PNG, JPG hasta 5MB</p>
+                                            </>
+                                        )}
+                                        {isReadOnly && <p className="text-sm text-muted-foreground font-medium">Sin imagen</p>}
                                     </div>
                                 )}
 
-                                <Input
-                                    id="file"
-                                    name="file"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                />
+                                {!isReadOnly && (
+                                    <Input
+                                        id="file"
+                                        name="file"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
 
                     <DialogFooter className="mt-8">
                         <Button type="button" variant="ghost" onClick={onClose} className="text-muted-foreground hover:text-foreground" disabled={isLoading}>
-                            Cancelar
+                            {isReadOnly ? "Cerrar" : "Cancelar"}
                         </Button>
-                        <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white" disabled={isLoading}>
-                            {isLoading ? "Guardando..." : "Guardar Producto"}
-                        </Button>
+                        {!isReadOnly && (
+                            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white" disabled={isLoading}>
+                                {isLoading ? "Guardando..." : "Guardar Producto"}
+                            </Button>
+                        )}
                     </DialogFooter>
                 </form>
             </DialogContent>

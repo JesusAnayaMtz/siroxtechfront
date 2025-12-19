@@ -25,9 +25,9 @@ export function SaleDetailsModal({ sale, products, users, open, onClose }: SaleD
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="bg-neutral-900 border-neutral-800 text-white sm:max-w-[700px]">
+            <DialogContent className="bg-background border-border text-foreground sm:max-w-[700px]">
                 <DialogHeader>
-                    <DialogTitle className="text-white">Detalle de Venta</DialogTitle>
+                    <DialogTitle className="text-foreground">Detalle de Venta</DialogTitle>
                     <DialogDescription>
                         ID: {sale.id}
                     </DialogDescription>
@@ -36,41 +36,41 @@ export function SaleDetailsModal({ sale, products, users, open, onClose }: SaleD
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                         <div className="flex justify-between items-center">
-                            <span className="text-neutral-400">Fecha:</span>
-                            <span className="text-white">{new Date(sale.createdAt).toLocaleString()}</span>
+                            <span className="text-muted-foreground">Fecha:</span>
+                            <span className="text-foreground">{new Date(sale.createdAt).toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-neutral-400">Usuario:</span>
-                            <span className="text-white">{user?.name || sale.userId}</span>
+                            <span className="text-muted-foreground">Usuario:</span>
+                            <span className="text-foreground">{user?.name || sale.userId}</span>
                         </div>
                     </div>
 
-                    <div className="rounded-md border border-neutral-800 bg-neutral-900/50">
+                    <div className="rounded-md border border-border bg-secondary/50">
                         <Table>
                             <TableHeader>
-                                <TableRow className="border-neutral-800">
-                                    <TableHead className="text-neutral-400">Producto</TableHead>
-                                    <TableHead className="text-right text-neutral-400">Cant.</TableHead>
-                                    <TableHead className="text-right text-neutral-400">Precio</TableHead>
-                                    <TableHead className="text-right text-neutral-400">Subtotal</TableHead>
+                                <TableRow className="border-border">
+                                    <TableHead className="text-muted-foreground">Producto</TableHead>
+                                    <TableHead className="text-right text-muted-foreground">Cant.</TableHead>
+                                    <TableHead className="text-right text-muted-foreground">Precio</TableHead>
+                                    <TableHead className="text-right text-muted-foreground">Subtotal</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {sale.items?.map((item) => {
                                     const product = products.find(p => p.id === item.productId);
                                     return (
-                                        <TableRow key={item.id} className="border-neutral-800">
-                                            <TableCell className="text-white">
+                                        <TableRow key={item.id} className="border-border">
+                                            <TableCell className="text-foreground">
                                                 <div className="flex flex-col">
                                                     <span className="font-medium">{product?.name || item.productId}</span>
                                                     {product?.description && (
-                                                        <span className="text-xs text-neutral-400">{product.description}</span>
+                                                        <span className="text-xs text-muted-foreground">{product.description}</span>
                                                     )}
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="text-right text-neutral-300">{item.quantity}</TableCell>
-                                            <TableCell className="text-right text-neutral-300">${item.unitPrice.toFixed(2)}</TableCell>
-                                            <TableCell className="text-right text-white font-medium">${(item.quantity * item.unitPrice).toFixed(2)}</TableCell>
+                                            <TableCell className="text-right text-foreground">{item.quantity}</TableCell>
+                                            <TableCell className="text-right text-foreground">${item.unitPrice.toFixed(2)}</TableCell>
+                                            <TableCell className="text-right text-foreground font-medium">${(item.quantity * item.unitPrice).toFixed(2)}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -78,10 +78,10 @@ export function SaleDetailsModal({ sale, products, users, open, onClose }: SaleD
                         </Table>
                     </div>
 
-                    <div className="flex justify-end pt-4 border-t border-neutral-800">
+                    <div className="flex justify-end pt-4 border-t border-border">
                         <div className="text-right">
-                            <span className="text-neutral-400 text-sm block">Total</span>
-                            <span className="text-2xl font-bold text-white">${sale.total.toFixed(2)}</span>
+                            <span className="text-muted-foreground text-sm block">Total</span>
+                            <span className="text-2xl font-bold text-foreground">${sale.total.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>

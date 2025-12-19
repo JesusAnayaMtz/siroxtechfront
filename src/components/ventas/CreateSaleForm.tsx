@@ -123,9 +123,9 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="bg-neutral-900 border-neutral-800 text-white sm:max-w-[600px]">
+            <DialogContent className="bg-background border-border text-foreground sm:max-w-[600px]">
                 <DialogHeader>
-                    <DialogTitle className="text-white">Nueva Venta</DialogTitle>
+                    <DialogTitle className="text-foreground">Nueva Venta</DialogTitle>
                     <DialogDescription>
                         Agregue productos a la venta.
                     </DialogDescription>
@@ -135,9 +135,9 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                     {/* Add Item Section */}
                     <div className="flex gap-4 items-end">
                         <div className="flex-1 space-y-2">
-                            <Label className="text-white">Producto</Label>
+                            <Label className="text-foreground">Producto</Label>
                             <select
-                                className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
                                 value={selectedProductId}
                                 onChange={(e) => setSelectedProductId(e.target.value)}
                             >
@@ -150,13 +150,13 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                             </select>
                         </div>
                         <div className="w-24 space-y-2">
-                            <Label className="text-white">Cantidad</Label>
+                            <Label className="text-foreground">Cantidad</Label>
                             <Input
                                 type="number"
                                 min="1"
                                 value={quantity}
                                 onChange={(e) => setQuantity(Number(e.target.value))}
-                                className="bg-neutral-800 border-neutral-700 text-white"
+                                className="bg-secondary border-input text-foreground"
                             />
                         </div>
                         <Button
@@ -170,9 +170,9 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                     </div>
 
                     {/* Items List */}
-                    <div className="rounded-md border border-neutral-800 bg-neutral-900/50 p-2 min-h-[150px] max-h-[300px] overflow-y-auto">
+                    <div className="rounded-md border border-border bg-secondary/50 p-2 min-h-[150px] max-h-[300px] overflow-y-auto">
                         {formik.values.items.length === 0 ? (
-                            <div className="flex items-center justify-center h-full text-neutral-500 text-sm">
+                            <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
                                 No hay productos agregados.
                             </div>
                         ) : (
@@ -182,38 +182,38 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                                     if (!product) return null
 
                                     return (
-                                        <div key={item.productId} className="flex items-center justify-between p-2 rounded bg-neutral-800 border border-neutral-700">
+                                        <div key={item.productId} className="flex items-center justify-between p-2 rounded bg-background border border-border">
                                             <div className="text-sm">
-                                                <div className="text-white font-medium">{product.name}</div>
-                                                <div className="text-neutral-400">
+                                                <div className="text-foreground font-medium">{product.name}</div>
+                                                <div className="text-muted-foreground">
                                                     {item.quantity} x ${product.price.toFixed(2)}
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-4">
-                                                <div className="flex items-center gap-1 bg-neutral-700 rounded-md p-0.5">
+                                                <div className="flex items-center gap-1 bg-secondary rounded-md p-0.5">
                                                     <Button
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-6 w-6 text-white hover:bg-neutral-600"
+                                                        className="h-6 w-6 text-foreground hover:bg-background"
                                                         onClick={() => handleUpdateQuantity(index, -1)}
                                                         disabled={item.quantity <= 1}
                                                     >
                                                         <span className="text-xs">-</span>
                                                     </Button>
-                                                    <span className="text-xs w-6 text-center text-white">{item.quantity}</span>
+                                                    <span className="text-xs w-6 text-center text-foreground">{item.quantity}</span>
                                                     <Button
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-6 w-6 text-white hover:bg-neutral-600"
+                                                        className="h-6 w-6 text-foreground hover:bg-background"
                                                         onClick={() => handleUpdateQuantity(index, 1)}
                                                     >
                                                         <span className="text-xs">+</span>
                                                     </Button>
                                                 </div>
 
-                                                <div className="text-white font-bold w-20 text-right">
+                                                <div className="text-foreground font-bold w-20 text-right">
                                                     ${(item.quantity * product.price).toFixed(2)}
                                                 </div>
                                                 <Button
@@ -221,7 +221,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                                                     variant="ghost"
                                                     size="icon"
                                                     onClick={() => handleRemoveItem(index)}
-                                                    className="h-8 w-8 text-red-400 hover:text-red-300"
+                                                    className="h-8 w-8 text-red-500 hover:text-red-600"
                                                 >
                                                     <Trash2 className="size-4" />
                                                 </Button>
@@ -234,21 +234,21 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                     </div>
 
                     {/* Total & Errors */}
-                    <div className="flex justify-between items-center border-t border-neutral-800 pt-4">
+                    <div className="flex justify-between items-center border-t border-border pt-4">
                         <div>
                             {typeof formik.errors.items === 'string' && (
                                 <p className="text-sm text-red-400">{formik.errors.items}</p>
                             )}
                         </div>
                         <div className="text-right">
-                            <span className="text-neutral-400 text-sm">Total a pagar:</span>
-                            <div className="text-2xl font-bold text-white">${total.toFixed(2)}</div>
+                            <span className="text-muted-foreground text-sm">Total a pagar:</span>
+                            <div className="text-2xl font-bold text-foreground">${total.toFixed(2)}</div>
                         </div>
                     </div>
                 </div>
 
                 <DialogFooter>
-                    <Button type="button" variant="ghost" onClick={handleClose} className="text-neutral-400 hover:text-white" disabled={isLoading}>
+                    <Button type="button" variant="ghost" onClick={handleClose} className="text-muted-foreground hover:text-foreground" disabled={isLoading}>
                         Cancelar
                     </Button>
                     <Button

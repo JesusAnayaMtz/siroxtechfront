@@ -3,7 +3,8 @@ import type { Product, CreateProductDto } from "@/types/product"
 import { ProductsTable } from "@/components/productos/ProductsTable"
 import { ProductForm } from "@/components/productos/ProductForm"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Plus, Search } from "lucide-react"
 import {
     useProducts,
     useCreateProduct,
@@ -24,6 +25,8 @@ export default function ProductosPage() {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+    const [isReadOnly, setIsReadOnly] = useState(false)
+    const [searchTerm, setSearchTerm] = useState("")
 
     const isLoading = isLoadingProducts || isLoadingCategories ||
         createMutation.isPending || updateMutation.isPending ||
@@ -31,11 +34,19 @@ export default function ProductosPage() {
 
     const handleCreate = () => {
         setSelectedProduct(null)
+        setIsReadOnly(false)
         setIsDialogOpen(true)
     }
 
     const handleEdit = (product: Product) => {
         setSelectedProduct(product)
+        setIsReadOnly(false)
+        setIsDialogOpen(true)
+    }
+
+    const handleView = (product: Product) => {
+        setSelectedProduct(product)
+        setIsReadOnly(true)
         setIsDialogOpen(true)
     }
 
@@ -71,14 +82,22 @@ export default function ProductosPage() {
     }
 
     // Sort products by name (client-side sort of the fetched data)
-    const sortedProducts = [...products].sort((a, b) => a.name.localeCompare(b.name))
+    const filteredProducts = products.filter(product => {
+        const term = searchTerm.toLowerCase();
+        return (
+            product.name.toLowerCase().includes(term) ||
+            (product.categoryName && product.categoryName.toLowerCase().includes(term))
+        );
+    });
+
+    const sortedProducts = [...filteredProducts].sort((a, b) => a.name.localeCompare(b.name))
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Productos</h1>
-                    <p className="text-neutral-400">Gestiona el inventario de tus productos</p>
+                    <h1 className="text-2xl font-bold text-foreground">Productos</h1>
+                    <p className="text-muted-foreground">Gestiona el inventario de tus productos</p>
                 </div>
                 <Button onClick={handleCreate} className="bg-indigo-600 hover:bg-indigo-700 text-white">
                     <Plus className="mr-2 size-4" />
@@ -86,11 +105,22 @@ export default function ProductosPage() {
                 </Button>
             </div>
 
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Input
+                    placeholder="Buscar por nombre o categoría..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground max-w-sm"
+                />
+            </div>
+
             <ProductsTable
                 data={sortedProducts}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onRestore={handleRestore}
+                onView={handleView}
             />
 
             <ProductForm
@@ -100,6 +130,7 @@ export default function ProductosPage() {
                 initialData={selectedProduct}
                 categories={categories}
                 isLoading={isLoading}
+                isReadOnly={isReadOnly}
             />
         </div>
     )

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Edit2, Trash2, RotateCcw } from "lucide-react"
+import { Edit2, Trash2, RotateCcw, Eye } from "lucide-react"
 import type { Product } from "@/types/product"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
@@ -8,9 +8,10 @@ interface ProductsTableProps {
     onEdit: (product: Product) => void;
     onDelete: (id: string) => void;
     onRestore: (id: string) => void;
+    onView: (product: Product) => void;
 }
 
-export function ProductsTable({ data, onEdit, onDelete, onRestore }: ProductsTableProps) {
+export function ProductsTable({ data, onEdit, onDelete, onRestore, onView }: ProductsTableProps) {
     const formatCurrency = (value: number) => {
         return new Intl.NumberFormat('es-MX', {
             style: 'currency',
@@ -59,6 +60,15 @@ export function ProductsTable({ data, onEdit, onDelete, onRestore }: ProductsTab
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => onView(product)}
+                                            className="h-8 w-8 text-neutral-400 hover:text-foreground hover:bg-neutral-500/10"
+                                            title="Ver detalle"
+                                        >
+                                            <Eye className="size-4" />
+                                        </Button>
                                         <Button
                                             variant="ghost"
                                             size="icon"

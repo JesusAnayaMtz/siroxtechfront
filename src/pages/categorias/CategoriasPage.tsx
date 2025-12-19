@@ -3,7 +3,8 @@ import type { Category, CreateCategoryDto } from "@/types/category"
 import { CategoriesTable } from "@/components/categorias/CategoriesTable"
 import { CategoryForm } from "@/components/categorias/CategoryForm"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Plus, Search } from "lucide-react"
 import {
     useCategories,
     useCreateCategory,
@@ -22,6 +23,7 @@ export default function CategoriasPage() {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
+    const [searchTerm, setSearchTerm] = useState("")
 
     const isLoading = isLoadingCategories ||
         createMutation.isPending || updateMutation.isPending ||
@@ -68,12 +70,16 @@ export default function CategoriasPage() {
         }
     }
 
+    const filteredCategories = categories.filter(category =>
+        category.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Categorías</h1>
-                    <p className="text-neutral-400">Gestiona las categorías de tus productos</p>
+                    <h1 className="text-2xl font-bold text-foreground">Categorías</h1>
+                    <p className="text-muted-foreground">Gestiona las categorías de tus productos</p>
                 </div>
                 <Button onClick={handleCreate} className="bg-indigo-600 hover:bg-indigo-700 text-white">
                     <Plus className="mr-2 size-4" />
@@ -81,8 +87,18 @@ export default function CategoriasPage() {
                 </Button>
             </div>
 
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Input
+                    placeholder="Buscar categorías por nombre..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground max-w-sm"
+                />
+            </div>
+
             <CategoriesTable
-                data={categories}
+                data={filteredCategories}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onRestore={handleRestore}

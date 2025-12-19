@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
-import { Plus } from "lucide-react"
+import { Plus, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { SalesTable } from "@/components/ventas/SalesTable"
 import { CreateSaleForm } from "@/components/ventas/CreateSaleForm"
 import { SaleDetailsModal } from "@/components/ventas/SaleDetailsModal"
@@ -17,6 +18,7 @@ export default function VentasPage() {
     const [products, setProducts] = useState<Product[]>([])
     const [users, setUsers] = useState<User[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [searchTerm, setSearchTerm] = useState("")
 
     // Create Modal State
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -84,12 +86,32 @@ export default function VentasPage() {
         }
     }
 
+    const filteredSales = sales.filter(sale => {
+        const term = searchTerm.toLowerCase();
+
+        // Find user name
+        const user = users.find(u => u.id === sale.userId);
+        const userName = user?.name?.toLowerCase() || "";
+
+        // Format date
+        const dateStr = new Date(sale.createdAt).toLocaleString().toLowerCase();
+
+        // Status
+        const status = sale.canceled ? "cancelada" : "activa";
+
+        return (
+            userName.includes(term) ||
+            dateStr.includes(term) ||
+            status.includes(term)
+        );
+    });
+
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Ventas</h1>
-                    <p className="text-neutral-400">Gestión de transacciones</p>
+                    <h1 className="text-2xl font-bold text-foreground">Ventas</h1>
+                    <p className="text-muted-foreground">Gestión de transacciones</p>
                 </div>
                 <Button
                     onClick={() => setIsCreateModalOpen(true)}
@@ -100,11 +122,21 @@ export default function VentasPage() {
                 </Button>
             </div>
 
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Input
+                    placeholder="Buscar por usuario, fecha o estado..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground max-w-sm"
+                />
+            </div>
+
             {isLoading ? (
-                <div className="text-center text-neutral-400 py-8">Cargando ventas...</div>
+                <div className="text-center text-muted-foreground py-8">Cargando ventas...</div>
             ) : (
                 <SalesTable
-                    data={sales}
+                    data={filteredSales}
                     users={users}
                     onView={handleViewSale}
                     onDelete={handleDeleteSale}
