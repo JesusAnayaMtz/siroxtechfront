@@ -53,9 +53,9 @@ export function CategoryForm({ open, onClose, onSubmit, initialData, isLoading }
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="bg-neutral-900 border-neutral-800 text-white sm:max-w-[425px]">
+            <DialogContent className="bg-background border-border text-foreground sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle className="text-white">
+                    <DialogTitle className="text-foreground">
                         {initialData ? "Editar Categoría" : "Nueva Categoría"}
                     </DialogTitle>
                     <DialogDescription>
@@ -64,7 +64,7 @@ export function CategoryForm({ open, onClose, onSubmit, initialData, isLoading }
                 </DialogHeader>
                 <form onSubmit={formik.handleSubmit} className="space-y-4 py-4">
                     <div className="space-y-2">
-                        <Label htmlFor="name" className="text-white">Nombre</Label>
+                        <Label htmlFor="name" className="text-foreground">Nombre</Label>
                         <Input
                             id="name"
                             name="name"
@@ -72,14 +72,14 @@ export function CategoryForm({ open, onClose, onSubmit, initialData, isLoading }
                             value={formik.values.name}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className="bg-neutral-800 border-neutral-700 text-white focus-visible:ring-indigo-500"
+                            className="bg-secondary border-input text-foreground focus-visible:ring-indigo-500"
                         />
                         {formik.touched.name && formik.errors.name && (
                             <p className="text-sm text-red-400">{formik.errors.name}</p>
                         )}
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="ghost" onClick={onClose} className="text-neutral-400 hover:text-white" disabled={isLoading}>
+                        <Button type="button" variant="ghost" onClick={onClose} className="text-muted-foreground hover:text-foreground" disabled={isLoading}>
                             Cancelar
                         </Button>
                         <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white" disabled={isLoading}>
