@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { CreateProductDto, UpdateProductDto } from '@/types/product'
 import { productsService } from '@/services/productsService'
 
+// Hooks personalizados para la gestión de productos usando React Query
 export const useProducts = () => {
     return useQuery({
         queryKey: ['products'],

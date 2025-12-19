@@ -29,7 +29,7 @@ export default function DashboardPage() {
         loadData()
     }, [])
 
-    // Metrics Calculation
+    // Cálculo de métricas generales
     const activeSales = sales.filter(s => !s.canceled)
     const canceledSales = sales.filter(s => s.canceled)
 
@@ -39,7 +39,7 @@ export default function DashboardPage() {
     const totalCanceledCount = canceledSales.length
     const totalCanceledAmount = canceledSales.reduce((acc, curr) => acc + curr.total, 0)
 
-    // Top Selling Product Logic
+    // Lógica para determinar el producto más vendido
     const productSalesMap = new Map<string, number>()
     activeSales.forEach(sale => {
         sale.items.forEach(item => {
@@ -68,7 +68,7 @@ export default function DashboardPage() {
             <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {/* Total Sales Amount */}
+                {/* Monto Total de Ventas */}
                 <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -84,7 +84,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                {/* Top Product */}
+                {/* Producto Estrella */}
                 <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -102,7 +102,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                {/* Canceled Sales Amount */}
+                {/* Monto de Ventas Canceladas */}
                 <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -118,7 +118,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                {/* Canceled Sales Count */}
+                {/* Conteo de Ventas Canceladas */}
                 <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">

@@ -11,6 +11,7 @@ interface ProductsTableProps {
     onView: (product: Product) => void;
 }
 
+// Tabla para visualizar, editar y eliminar productos
 export function ProductsTable({ data, onEdit, onDelete, onRestore, onView }: ProductsTableProps) {
     const formatCurrency = (value: number) => {
         return new Intl.NumberFormat('es-MX', {

@@ -26,6 +26,7 @@ const validationSchema = Yup.object({
         }),
 });
 
+// Formulario para la visualización y edición del perfil de usuario
 export default function ProfileForm() {
     const { user } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
@@ -57,7 +58,7 @@ export default function ProfileForm() {
                 // await usersService.update("userId", updateData);
                 // setSuccess("Perfil actualizado correctamente");
 
-                console.log("Updating user:", updateData);
+                console.log("Actualizando usuario:", updateData);
                 alert("Simulado: Perfil actualizado " + JSON.stringify(updateData));
                 setIsEditing(false);
 

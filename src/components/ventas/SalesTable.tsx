@@ -11,6 +11,7 @@ interface SalesTableProps {
     onDelete: (id: string) => void;
 }
 
+// Tabla para visualizar el historial de ventas
 export function SalesTable({ data, users, onView, onDelete }: SalesTableProps) {
     return (
         <div className="rounded-md border border-border bg-card">

@@ -23,6 +23,7 @@ import { menuData } from "@/config/menu"
 import { useLogout } from "@/hooks/use-logout"
 import { useAuth } from "@/context/AuthContext"
 
+// Barra lateral principal de la aplicación que contiene la navegación y el perfil
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const logout = useLogout()
   const { user } = useAuth()
@@ -38,7 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <ModeToggle />
             <SidebarTrigger />
           </div>
-          {/* Trigger visible only when collapsed */}
+          {/* Gatillo visible solo cuando está colapsado */}
           <div className="hidden group-data-[collapsible=icon]:block">
             <SidebarTrigger />
           </div>

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Servicio de autenticación para login y registro
 export const login = async (email: string, password: string) => {
     try {
         const response = await axios.post(`${API_URL}/auth/login`, {
@@ -23,7 +24,7 @@ export const register = async (data: any) => {
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            // Backend validation errors often come in 'message' which might be an array or string
+            // Los errores de validación del backend suelen venir en 'message', que puede ser un array o string
             const message = error.response?.data?.message;
             if (Array.isArray(message)) {
                 throw new Error(message.join(', '));

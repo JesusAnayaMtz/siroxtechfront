@@ -8,6 +8,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+// Componente principal de navegación para la barra lateral
+// Renderiza grupos de menús y maneja el estado activo
 export function NavMain({
   items,
 }: {

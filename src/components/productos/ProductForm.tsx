@@ -33,6 +33,7 @@ const validationSchema = Yup.object({
     description: Yup.string(),
 })
 
+// Componente de formulario para crear y editar productos
 export function ProductForm({ open, onClose, onSubmit, initialData, categories, isLoading, isReadOnly = false }: ProductFormProps) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -55,7 +56,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
 
     useEffect(() => {
         if (open) {
-            // Logic to find the category ID if it's missing but we have the name
+            // Lógica para encontrar el id de la categoría con su nombre
             let catId = initialData?.categoryId || "";
             if (!catId && initialData?.categoryName) {
                 const foundCat = categories.find(c => c.name === initialData.categoryName);

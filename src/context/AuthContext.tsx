@@ -19,6 +19,7 @@ interface AuthProviderProps {
     children: React.ReactNode;
 }
 
+// Proveedor de contexto de autenticación que maneja el estado del usuario globalmente
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 

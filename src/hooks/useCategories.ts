@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { CreateCategoryDto } from '@/types/category'
 import { categoriesService } from '@/services/categoriesService'
 
+// Hooks personalizados para la gestión de categorías usando React Query
 export const useCategories = () => {
     return useQuery({
         queryKey: ['categories'],

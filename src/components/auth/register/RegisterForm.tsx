@@ -8,6 +8,7 @@ import { register } from "@/services/authService"
 import { useNavigate } from "react-router-dom"
 import type { CreateUserDto } from "@/types/user"
 
+// Esquema de validación para los campos del formulario
 const validationSchema = Yup.object({
     name: Yup.string()
         .min(3, "El nombre debe tener al menos 3 caracteres")
@@ -24,6 +25,7 @@ const validationSchema = Yup.object({
         .required('Confirma tu contraseña'),
 })
 
+// Componente de formulario de registro que gestiona el estado y envío de datos
 export default function RegisterForm() {
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
@@ -41,8 +43,7 @@ export default function RegisterForm() {
             setIsLoading(true)
             setError(null)
             try {
-                // Destructure confirmPassword out and keep the rest
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                // Excluimos confirmPassword antes de enviar los datos al servicio
                 const { confirmPassword, ...registerData } = values;
                 await register(registerData as CreateUserDto)
                 navigate("/login")

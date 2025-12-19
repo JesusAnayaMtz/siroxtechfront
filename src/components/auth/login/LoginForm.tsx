@@ -15,6 +15,7 @@ const validationSchema = Yup.object({
 import { useAuth } from "@/context/AuthContext"
 import { login } from "@/services/authService";
 
+// Formulario de inicio de sesión con validación y manejo de errores
 const LoginForm = () => {
 
     const navigate = useNavigate()

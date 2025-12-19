@@ -27,6 +27,7 @@ const validationSchema = Yup.object({
     name: Yup.string().required("El nombre es requerido"),
 })
 
+// Componente de formulario para crear y editar categorías
 export function CategoryForm({ open, onClose, onSubmit, initialData, isLoading }: CategoryFormProps) {
     const formik = useFormik({
         initialValues: {
@@ -39,7 +40,7 @@ export function CategoryForm({ open, onClose, onSubmit, initialData, isLoading }
         },
     })
 
-    // Reset form when opening/closing or changing selection
+    // Reinicia el formulario al abrir/cerrar o cambiar la selección
     useEffect(() => {
         if (open) {
             formik.setValues({

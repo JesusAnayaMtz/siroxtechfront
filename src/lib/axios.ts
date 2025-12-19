@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Instancia global de Axios configurada con la URL base
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
 });
@@ -20,8 +21,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        // Optional: Handle 401 Unauthorized globally (e.g. redirect to login)
-        // but for now we just pass it validly to the service
+        // Opcional: Manejar 401 Unauthorized globalmente (ej. redirigir a login)
+        // por ahora solo rechazamos el error para que lo maneje el servicio
         return Promise.reject(error);
     }
 );

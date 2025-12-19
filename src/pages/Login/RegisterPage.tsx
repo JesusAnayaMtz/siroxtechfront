@@ -2,12 +2,12 @@ import RegisterForm from "@/components/auth/register/RegisterForm"
 import { Link } from "react-router-dom"
 import logoWeb from "@/assets/logoweb.png"
 
+// Página de registro de nuevos usuarios
 const RegisterPage = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-neutral-900">
             <div className="max-w-md w-full space-y-8 p-8 bg-neutral-800 rounded-lg shadow-lg">
                 <div>
-                    {/* Using the same logo as Login */}
                     <img src={logoWeb} alt="Logo SyroxTech" className="mx-auto h-28 w-auto" />
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Crear Cuenta</h2>
                 </div>

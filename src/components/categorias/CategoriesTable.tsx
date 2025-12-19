@@ -11,6 +11,7 @@ interface CategoriesTableProps {
     onRestore: (id: string) => void;
 }
 
+// Tabla para visualizar, editar y eliminar categorías
 export function CategoriesTable({ data, onEdit, onDelete, onRestore }: CategoriesTableProps) {
     return (
         <div className="rounded-md border border-border bg-card">

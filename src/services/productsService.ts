@@ -1,20 +1,21 @@
 import api from '@/lib/axios';
 import type { Product, CreateProductDto, UpdateProductDto } from '@/types/product';
 
+// Servicio para la gestión de productos (CRUD y restauración)
 export const productsService = {
-    // GET /products
+    // Obtiene la lista completa de productos activos e inactivos
     findAll: async (): Promise<Product[]> => {
         const response = await api.get<Product[]>('/products');
         return response.data;
     },
 
-    // GET /products/:id
+    // Busca un producto específico por su identificador
     findOne: async (id: string): Promise<Product> => {
         const response = await api.get<Product>(`/products/${id}`);
         return response.data;
     },
 
-    // POST /products
+    // Crea un nuevo producto con imagen opcional
     create: async (data: CreateProductDto): Promise<Product> => {
         const formData = new FormData();
         formData.append('name', data.name);
@@ -31,7 +32,7 @@ export const productsService = {
         return response.data;
     },
 
-    // PATCH /products/:id
+    // Actualiza los datos de un producto existente
     update: async (id: string, data: UpdateProductDto): Promise<Product> => {
         const formData = new FormData();
         if (data.name) formData.append('name', data.name);
@@ -48,12 +49,12 @@ export const productsService = {
         return response.data;
     },
 
-    // DELETE /products/:id
+    // Desactiva (soft delete) un producto
     remove: async (id: string): Promise<void> => {
         await api.delete(`/products/${id}`);
     },
 
-    // PATCH /products/restore/:id
+    // Restaura un producto previamente desactivado
     restoreProduct: async (id: string): Promise<void> => {
         await api.patch(`/products/restore/${id}`);
     }

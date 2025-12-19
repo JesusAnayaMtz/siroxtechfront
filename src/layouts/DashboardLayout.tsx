@@ -20,13 +20,13 @@ export default function DashboardLayout() {
 
     return (
         <SidebarProvider>
-            {/* Desktop Sidebar - Hidden on mobile */}
+            {/* Barra lateral de escritorio - Oculta en móvil */}
             <div className="hidden md:block">
                 <AppSidebar />
             </div>
 
             <SidebarInset>
-                {/* Mobile Header */}
+                {/* Cabecera Móvil */}
                 <header className="flex h-16 items-center justify-between border-b bg-background px-4 md:hidden">
                     <img src={logoWeb} alt="Logo" className="h-8 w-auto" />
                     <div className="flex items-center gap-2">
@@ -40,20 +40,19 @@ export default function DashboardLayout() {
                     </div>
                 </header>
 
-                {/* Mobile Dropdown Menu */}
+                {/* Menú desplegable móvil */}
                 {isMobileMenuOpen && (
                     <div className="border-b bg-background px-4 py-4 md:hidden animate-in slide-in-from-top-2">
                         <nav className="flex flex-col gap-4">
-                            {/* User Info */}
                             <div className="flex items-center gap-3 rounded-lg bg-secondary p-3">
-                                <div className="size-8 rounded-full bg-muted-foreground/20" /> {/* Placeholder avatar if needed or use image */}
+                                <div className="size-8 rounded-full bg-muted-foreground/20" />
                                 <div>
                                     <p className="text-sm font-semibold text-foreground">{user?.name || menuData.user.name}</p>
                                     <p className="text-xs text-muted-foreground">{user?.email || menuData.user.email}</p>
                                 </div>
                             </div>
 
-                            {/* Menu Items */}
+                            {/* Elementos del menú */}
                             {menuData.navMain.map((item) => (
                                 <a
                                     key={item.title}
@@ -65,8 +64,6 @@ export default function DashboardLayout() {
                                     {item.title}
                                 </a>
                             ))}
-
-                            {/* Logout */}
                             <button
                                 className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium text-red-500 hover:bg-red-500/10"
                                 onClick={() => {

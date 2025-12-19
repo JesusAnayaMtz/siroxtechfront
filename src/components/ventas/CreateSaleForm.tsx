@@ -25,7 +25,7 @@ interface CreateSaleFormProps {
     isLoading?: boolean;
 }
 
-// Schema validates that there is at least one item
+// El esquema valida que haya al menos un producto en la venta
 const validationSchema = Yup.object({
     items: Yup.array().of(
         Yup.object({
@@ -38,16 +38,16 @@ const validationSchema = Yup.object({
 export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSaleFormProps) {
     const [products, setProducts] = useState<Product[]>([])
 
-    // Local state for the "Add Item" inputs
+    // Estado local para los inputs de "Agregar Item"
     const [selectedProductId, setSelectedProductId] = useState<string>("")
     const [quantity, setQuantity] = useState<number>(1)
 
-    // Load products on mount
+    // Cargar productos al montar el componente
     useEffect(() => {
         const loadProducts = async () => {
             try {
                 const data = await productsService.findAll()
-                setProducts(data.filter(p => p.isActive)) // Only active products
+                setProducts(data.filter(p => p.isActive)) // Solo productos activos
             } catch (error) {
                 console.error("Failed to load products", error)
             }
@@ -79,7 +79,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
         const product = products.find(p => p.id === selectedProductId)
         if (!product) return
 
-        // Check if already exists, then update quantity
+        // Verificamos si ya existe para actualizar la cantidad
         const existingItemIndex = formik.values.items.findIndex(item => item.productId === selectedProductId)
 
         if (existingItemIndex >= 0) {
@@ -93,7 +93,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
             ])
         }
 
-        // Reset inputs
+        // Reseteamos los inputs
         setSelectedProductId("")
         setQuantity(1)
     }
@@ -115,7 +115,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
         formik.setFieldValue("items", newItems)
     }
 
-    // Calculate total for display
+    // Calcular el total
     const total = formik.values.items.reduce((acc, item) => {
         const product = products.find(p => p.id === item.productId)
         return acc + (product ? product.price * item.quantity : 0)
@@ -132,7 +132,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
-                    {/* Add Item Section */}
+                    {/* Sección de agregar producto */}
                     <div className="flex gap-4 items-end">
                         <div className="flex-1 space-y-2">
                             <Label className="text-foreground">Producto</Label>
@@ -169,7 +169,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                         </Button>
                     </div>
 
-                    {/* Items List */}
+                    {/* Lista de items agregados */}
                     <div className="rounded-md border border-border bg-secondary/50 p-2 min-h-[150px] max-h-[300px] overflow-y-auto">
                         {formik.values.items.length === 0 ? (
                             <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
@@ -233,7 +233,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                         )}
                     </div>
 
-                    {/* Total & Errors */}
+                    {/* Total y errores*/}
                     <div className="flex justify-between items-center border-t border-border pt-4">
                         <div>
                             {typeof formik.errors.items === 'string' && (
