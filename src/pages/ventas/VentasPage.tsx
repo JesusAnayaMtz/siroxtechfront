@@ -121,7 +121,7 @@ export default function VentasPage() {
             dateStr.includes(term) ||
             status.includes(term)
         );
-    });
+    }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return (
         <div className="space-y-6">
