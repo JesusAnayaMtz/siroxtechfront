@@ -13,6 +13,7 @@ import {
     useRestoreProduct
 } from "@/hooks/useProducts"
 import { useCategories } from "@/hooks/useCategories"
+import { showConfirm } from "@/lib/sweetalert"
 
 export default function ProductosPage() {
     const { data: products = [], isLoading: isLoadingProducts } = useProducts()
@@ -51,7 +52,8 @@ export default function ProductosPage() {
     }
 
     const handleDelete = async (id: string) => {
-        if (!confirm("¿Estás seguro de que quieres desactivar este producto?")) return
+        const confirmed = await showConfirm("¿Desactivar Producto?", "¿Estás seguro de que quieres desactivar este producto?", "Sí, desactivar")
+        if (!confirmed) return
         try {
             await deleteMutation.mutateAsync(id)
         } catch (error) {
@@ -60,7 +62,8 @@ export default function ProductosPage() {
     }
 
     const handleRestore = async (id: string) => {
-        if (!confirm("¿Estás seguro de que quieres restaurar este producto?")) return
+        const confirmed = await showConfirm("¿Restaurar Producto?", "¿Estás seguro de que quieres restaurar este producto?", "Sí, restaurar")
+        if (!confirmed) return
         try {
             await restoreMutation.mutateAsync(id)
         } catch (error) {

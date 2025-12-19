@@ -223,7 +223,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
                     </div>
 
                     <DialogFooter className="mt-8">
-                        <Button type="button" variant="ghost" onClick={onClose} className="text-muted-foreground hover:text-foreground" disabled={isLoading}>
+                        <Button type="button" variant="outline" onClick={onClose} className="text-muted-foreground hover:text-foreground border-border" disabled={isLoading}>
                             {isReadOnly ? "Cerrar" : "Cancelar"}
                         </Button>
                         {!isReadOnly && (

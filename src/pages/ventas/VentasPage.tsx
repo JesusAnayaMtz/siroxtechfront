@@ -9,6 +9,7 @@ import { salesService } from "@/services/salesService"
 import { productsService } from "@/services/productsService"
 import { usersService } from "@/services/usersService"
 import { useAuth } from "@/context/AuthContext"
+import { showConfirm } from "@/lib/sweetalert"
 import type { Sale, CreateSaleDto } from "@/types/sale"
 import type { Product } from "@/types/product"
 import type { User } from "@/types/user"
@@ -69,7 +70,8 @@ export default function VentasPage() {
     }
 
     const handleDeleteSale = async (id: string) => {
-        if (!confirm("¿Está seguro de cancelar esta venta?")) return
+        const confirmed = await showConfirm("¿Cancelar Venta?", "¿Está seguro de cancelar esta venta? Esta acción no se puede deshacer.", "Sí, cancelar")
+        if (!confirmed) return
         try {
             await salesService.remove(id)
             await loadData()

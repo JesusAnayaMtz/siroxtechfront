@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 // import { usersService } from "@/services/usersService";
 import type { UpdateUserDto } from "@/types/user";
 import { Pencil, X, Check } from "lucide-react";
+import { showAlert } from "@/lib/sweetalert";
 
 const validationSchema = Yup.object({
     name: Yup.string()
@@ -59,7 +60,7 @@ export default function ProfileForm() {
                 // setSuccess("Perfil actualizado correctamente");
 
                 console.log("Actualizando usuario:", updateData);
-                alert("Simulado: Perfil actualizado " + JSON.stringify(updateData));
+                await showAlert("Perfil Actualizado", "Simulado: Perfil actualizado correctamente");
                 setIsEditing(false);
 
             } catch (err: any) {

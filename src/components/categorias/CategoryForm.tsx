@@ -81,7 +81,7 @@ export function CategoryForm({ open, onClose, onSubmit, initialData, isLoading }
                         )}
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="ghost" onClick={onClose} className="text-muted-foreground hover:text-foreground" disabled={isLoading}>
+                        <Button type="button" variant="outline" onClick={onClose} className="text-muted-foreground hover:text-foreground border-border" disabled={isLoading}>
                             Cancelar
                         </Button>
                         <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white" disabled={isLoading}>

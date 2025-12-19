@@ -250,7 +250,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
                 </div>
 
                 <DialogFooter>
-                    <Button type="button" variant="ghost" onClick={handleClose} className="text-muted-foreground hover:text-foreground" disabled={isLoading}>
+                    <Button type="button" variant="outline" onClick={handleClose} className="text-muted-foreground hover:text-foreground border-border" disabled={isLoading}>
                         Cancelar
                     </Button>
                     <Button

@@ -12,6 +12,7 @@ import {
     useDeleteCategory,
     useRestoreCategory
 } from "@/hooks/useCategories"
+import { showConfirm } from "@/lib/sweetalert"
 
 export default function CategoriasPage() {
     const { data: categories = [], isLoading: isLoadingCategories } = useCategories()
@@ -40,7 +41,8 @@ export default function CategoriasPage() {
     }
 
     const handleDelete = async (id: string) => {
-        if (!confirm("¿Estás seguro de que quieres desactivar esta categoría?")) return
+        const confirmed = await showConfirm("¿Desactivar Categoría?", "¿Estás seguro de que quieres desactivar esta categoría?", "Sí, desactivar")
+        if (!confirmed) return
         try {
             await deleteMutation.mutateAsync(id)
         } catch (error) {
@@ -49,7 +51,8 @@ export default function CategoriasPage() {
     }
 
     const handleRestore = async (id: string) => {
-        if (!confirm("¿Estás seguro de que quieres restaurar esta categoría?")) return
+        const confirmed = await showConfirm("¿Restaurar Categoría?", "¿Estás seguro de que quieres restaurar esta categoría?", "Sí, restaurar")
+        if (!confirmed) return
         try {
             await restoreMutation.mutateAsync(id)
         } catch (error) {
