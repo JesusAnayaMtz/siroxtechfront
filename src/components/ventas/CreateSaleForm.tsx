@@ -64,6 +64,7 @@ export function CreateSaleForm({ open, onClose, onSubmit, isLoading }: CreateSal
             await onSubmit(values)
             handleClose()
         },
+        validateOnBlur: false,
     })
 
     const handleClose = () => {

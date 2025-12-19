@@ -52,6 +52,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
             formik.resetForm()
             setPreviewUrl(null)
         },
+        validateOnBlur: false,
     })
 
     useEffect(() => {
