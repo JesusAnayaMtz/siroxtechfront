@@ -10,7 +10,11 @@ import { productsService } from "@/services/productsService"
 import { usersService } from "@/services/usersService"
 import { useAuth } from "@/context/AuthContext"
 import { showConfirm } from "@/lib/sweetalert"
+import { Pagination } from "@/components/ui/pagination"
 import type { Sale, CreateSaleDto } from "@/types/sale"
+
+const ITEMS_PER_PAGE = 10
+
 import type { Product } from "@/types/product"
 import type { User } from "@/types/user"
 
@@ -20,6 +24,7 @@ export default function VentasPage() {
     const [users, setUsers] = useState<User[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState("")
+    const [currentPage, setCurrentPage] = useState(1)
 
     // Create Modal State
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -129,7 +134,10 @@ export default function VentasPage() {
                 <Input
                     placeholder="Buscar por usuario, fecha o estado..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value)
+                        setCurrentPage(1)
+                    }}
                     className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground max-w-sm"
                 />
             </div>
@@ -137,13 +145,21 @@ export default function VentasPage() {
             {isLoading ? (
                 <div className="text-center text-muted-foreground py-8">Cargando ventas...</div>
             ) : (
-                <SalesTable
-                    data={filteredSales}
-                    users={users}
-                    onView={handleViewSale}
-                    onDelete={handleDeleteSale}
-                />
+                <>
+                    <SalesTable
+                        data={filteredSales.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)}
+                        users={users}
+                        onView={handleViewSale}
+                        onDelete={handleDeleteSale}
+                    />
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filteredSales.length / ITEMS_PER_PAGE)}
+                        onPageChange={setCurrentPage}
+                    />
+                </>
             )}
+
 
             <CreateSaleForm
                 open={isCreateModalOpen}

@@ -13,6 +13,10 @@ import {
     useRestoreCategory
 } from "@/hooks/useCategories"
 import { showConfirm } from "@/lib/sweetalert"
+import { Pagination } from "@/components/ui/pagination"
+
+const ITEMS_PER_PAGE = 10
+
 
 export default function CategoriasPage() {
     const { data: categories = [], isLoading: isLoadingCategories } = useCategories()
@@ -25,6 +29,8 @@ export default function CategoriasPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
     const [searchTerm, setSearchTerm] = useState("")
+    const [currentPage, setCurrentPage] = useState(1)
+
 
     const isLoading = isLoadingCategories ||
         createMutation.isPending || updateMutation.isPending ||
@@ -95,7 +101,11 @@ export default function CategoriasPage() {
                 <Input
                     placeholder="Buscar categorías por nombre..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value)
+                        setCurrentPage(1)
+                    }}
+
                     className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground max-w-sm"
                 />
             </div>
@@ -103,13 +113,21 @@ export default function CategoriasPage() {
             {isLoading ? (
                 <div className="text-center text-muted-foreground py-8">Cargando categorías...</div>
             ) : (
-                <CategoriesTable
-                    data={filteredCategories}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onRestore={handleRestore}
-                />
+                <>
+                    <CategoriesTable
+                        data={filteredCategories.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onRestore={handleRestore}
+                    />
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filteredCategories.length / ITEMS_PER_PAGE)}
+                        onPageChange={setCurrentPage}
+                    />
+                </>
             )}
+
 
             <CategoryForm
                 open={isDialogOpen}

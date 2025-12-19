@@ -14,6 +14,10 @@ import {
 } from "@/hooks/useProducts"
 import { useCategories } from "@/hooks/useCategories"
 import { showConfirm } from "@/lib/sweetalert"
+import { Pagination } from "@/components/ui/pagination"
+
+const ITEMS_PER_PAGE = 10
+
 
 export default function ProductosPage() {
     const { data: products = [], isLoading: isLoadingProducts } = useProducts()
@@ -28,6 +32,7 @@ export default function ProductosPage() {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [isReadOnly, setIsReadOnly] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
+    const [currentPage, setCurrentPage] = useState(1)
 
     const isLoading = isLoadingProducts || isLoadingCategories ||
         createMutation.isPending || updateMutation.isPending ||
@@ -113,7 +118,10 @@ export default function ProductosPage() {
                 <Input
                     placeholder="Buscar por nombre o categoría..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value)
+                        setCurrentPage(1)
+                    }}
                     className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground max-w-sm"
                 />
             </div>
@@ -121,14 +129,22 @@ export default function ProductosPage() {
             {isLoading ? (
                 <div className="text-center text-muted-foreground py-8">Cargando productos...</div>
             ) : (
-                <ProductsTable
-                    data={sortedProducts}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onRestore={handleRestore}
-                    onView={handleView}
-                />
+                <>
+                    <ProductsTable
+                        data={sortedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onRestore={handleRestore}
+                        onView={handleView}
+                    />
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(sortedProducts.length / ITEMS_PER_PAGE)}
+                        onPageChange={setCurrentPage}
+                    />
+                </>
             )}
+
 
             <ProductForm
                 open={isDialogOpen}
