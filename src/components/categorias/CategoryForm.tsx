@@ -39,6 +39,7 @@ export function CategoryForm({ open, onClose, onSubmit, initialData, isLoading }
             formik.resetForm()
         },
         validateOnBlur: false,
+        validateOnChange: false,
     })
 
     // Reinicia el formulario al abrir/cerrar o cambiar la selección

@@ -53,6 +53,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
             setPreviewUrl(null)
         },
         validateOnBlur: false,
+        validateOnChange: false,
     })
 
     useEffect(() => {
