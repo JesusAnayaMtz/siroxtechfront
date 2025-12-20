@@ -90,7 +90,7 @@ export function ProductForm({ open, onClose, onSubmit, initialData, categories, 
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="bg-background border-border text-foreground sm:max-w-4xl">
+            <DialogContent className="bg-background border-border text-foreground sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-foreground text-xl">
                         {isReadOnly ? "Detalle de Producto" : (initialData ? "Editar Producto" : "Nuevo Producto")}
