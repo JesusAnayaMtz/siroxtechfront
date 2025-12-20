@@ -54,3 +54,11 @@ export const showAlert = async (
         // background: 'transparent',
     })
 }
+
+export const showSuccess = async (title: string, text: string = '') => {
+    await showAlert(title, text, 'success')
+}
+
+export const showError = async (title: string, text: string = '') => {
+    await showAlert(title, text, 'error')
+}

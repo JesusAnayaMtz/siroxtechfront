@@ -7,6 +7,7 @@ import DashboardPage from "./pages/dashboard/DashboardPage"
 import CategoriasPage from "./pages/categorias/CategoriasPage"
 import ProductosPage from "./pages/productos/ProductosPage"
 import ClientsPage from "./pages/clientes/ClientsPage"
+import UsersPage from "./pages/usuarios/UsersPage"
 import VentasPage from "./pages/ventas/VentasPage"
 import { ProtectedRoute } from "./components/auth/ProtectedRoute"
 import { AuthProvider } from "./context/AuthContext"
@@ -32,6 +33,7 @@ function App() {
               <Route path="/categorias" element={<CategoriasPage />} />
               <Route path="/productos" element={<ProductosPage />} />
               <Route path="/clientes" element={<ClientsPage />} />
+              <Route path="/usuarios" element={<UsersPage />} />
               <Route path="/ventas" element={<VentasPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>

@@ -1,5 +1,5 @@
 import api from '@/lib/axios';
-import type { User } from '@/types/user';
+import type { User, CreateUserDto } from '@/types/user';
 
 // Servicio encargado de las peticiones relacionadas con la gestión de usuarios
 export const usersService = {
@@ -15,9 +15,20 @@ export const usersService = {
         return response.data;
     },
 
+    // Crea un nuevo usuario
+    create: async (data: CreateUserDto): Promise<User> => {
+        const response = await api.post<User>('/users', data);
+        return response.data;
+    },
+
     // Actualiza los datos de un usuario existente
     update: async (id: string, data: Partial<User> | any): Promise<User> => {
         const response = await api.patch<User>(`/users/${id}`, data);
         return response.data;
+    },
+
+    // Elimina (o desactiva) un usuario
+    remove: async (id: string): Promise<void> => {
+        await api.delete(`/users/${id}`);
     }
 };
